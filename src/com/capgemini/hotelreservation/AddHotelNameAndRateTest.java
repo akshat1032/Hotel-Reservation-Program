@@ -12,22 +12,25 @@ public class AddHotelNameAndRateTest {
 
 	private HotelReservation hotelReservation = new HotelReservation();
 	String hotelName1 = "Lakewood";
-	int weekdayRate1 = 110, weekendRate1 = 90;
+	int weekdayRate1 = 110, weekendRate1 = 90, ratings1 = 3;
 	String hotelName2 = "Bridgewood";
-	int weekdayRate2 = 160, weekendRate2 = 60;
+	int weekdayRate2 = 160, weekendRate2 = 60, ratings2 = 4;
 	String hotelName3 = "Ridgewood";
-	int weekdayRate3 = 220, weekendRate3 = 150;
+	int weekdayRate3 = 220, weekendRate3 = 150, ratings3 = 5;
 
 	Logger logger = Logger.getLogger(AddHotelNameAndRateTest.class.getName());
 
 	// Test to check for addition of hotel to the reservation system
 	@Test
-	public void testAddHotelNameAndRate() {
+	public void testAddHotelDetails() {
 
 		// Calling the function to store details
-		hotelReservation.addHotelNameAndRate(weekdayRate1, weekendRate1, hotelName1, CustomerType.RegularCustomer);
-		hotelReservation.addHotelNameAndRate(weekdayRate2, weekendRate2, hotelName2, CustomerType.RegularCustomer);
-		hotelReservation.addHotelNameAndRate(weekdayRate3, weekendRate3, hotelName3, CustomerType.RegularCustomer);
+		hotelReservation.addHotelNameAndRate(weekdayRate1, weekendRate1, ratings1, hotelName1,
+				CustomerType.RegularCustomer);
+		hotelReservation.addHotelNameAndRate(weekdayRate2, weekendRate2, ratings2, hotelName2,
+				CustomerType.RegularCustomer);
+		hotelReservation.addHotelNameAndRate(weekdayRate3, weekendRate3, ratings3, hotelName3,
+				CustomerType.RegularCustomer);
 
 		// Testing with weekday rate
 		Assert.assertEquals(110, HotelReservation.hotelList.get("Lakewood").getWeekdayRate());
@@ -39,23 +42,11 @@ public class AddHotelNameAndRateTest {
 		Assert.assertEquals(60, HotelReservation.hotelList.get("Bridgewood").getWeekendRate());
 		Assert.assertEquals(150, HotelReservation.hotelList.get("Ridgewood").getWeekendRate());
 
+		// Testing for ratings
+		Assert.assertEquals(3, HotelReservation.hotelList.get("Lakewood").getRatings());
+		Assert.assertEquals(4, HotelReservation.hotelList.get("Bridgewood").getRatings());
+		Assert.assertEquals(5, HotelReservation.hotelList.get("Ridgewood").getRatings());
+
 		logger.info("Hotel details added and tested");
-	}
-
-	// Test to check for cheapest hotel for date range based on weekday and weekend
-	@Test
-	public void testCheapestHotelForDate() {
-
-		// Calling the function to store details
-		hotelReservation.addHotelNameAndRate(weekdayRate1, weekendRate1, hotelName1, CustomerType.RegularCustomer);
-		hotelReservation.addHotelNameAndRate(weekdayRate2, weekendRate2, hotelName2, CustomerType.RegularCustomer);
-		hotelReservation.addHotelNameAndRate(weekdayRate3, weekendRate3, hotelName3, CustomerType.RegularCustomer);
-		// Giving Date
-		ArrayList<String> date = new ArrayList<String>();
-		date.add("11September2020");
-		date.add("12September2020");
-		Assert.assertEquals("Lakewood, Total Rates: $200", hotelReservation.cheapestHotelByDate(date));
-
-		logger.info("Cheapest hotel based on weekday and weekend rate returend");
 	}
 }
