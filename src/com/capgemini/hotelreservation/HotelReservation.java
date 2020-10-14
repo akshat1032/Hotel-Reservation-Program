@@ -27,8 +27,8 @@ public class HotelReservation {
 	public static HashMap<String, Hotel> hotelList = new HashMap<String, Hotel>();
 
 	// Adding hotel name and rate for each hotel to the system
-	public void addHotelNameAndRate(int weekdayRate, int weekendRate, String hotelName, CustomerType customerType) {
-		Hotel hotelDetails = new Hotel(weekdayRate, weekendRate, customerType);
+	public void addHotelNameAndRate(int weekdayRate, int weekendRate, int ratings, String hotelName, CustomerType customerType) {
+		Hotel hotelDetails = new Hotel(weekdayRate, weekendRate, ratings, customerType);
 		hotelList.put(hotelName, hotelDetails);
 	}
 
