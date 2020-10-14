@@ -27,12 +27,14 @@ public class HotelReservation {
 	public static HashMap<String, Hotel> hotelList = new HashMap<String, Hotel>();
 
 	// Adding hotel name and rate for each hotel to the system
-	public void addHotelNameAndRate(int weekdayRate, int weekendRate, int ratings, String hotelName, CustomerType customerType) {
+	public void addHotelNameAndRate(int weekdayRate, int weekendRate, int ratings, String hotelName,
+			CustomerType customerType) {
 		Hotel hotelDetails = new Hotel(weekdayRate, weekendRate, ratings, customerType);
 		hotelList.put(hotelName, hotelDetails);
 	}
 
-	// Return cheapest hotel by range of date based on weekend and weekdays
+	// Return cheapest hotel and best rated by range of date based on weekend and
+	// weekdays
 	public String cheapestHotelByDate(ArrayList<String> date) {
 		LocalDate dateFormat[] = new LocalDate[2];
 		int dateIndex = 0;
@@ -69,11 +71,27 @@ public class HotelReservation {
 			hotelIndex++;
 			counterNoOfDays = 0;
 		} while (hotelIndex != 3);
-		return totalRate[0] < totalRate[1]
-				? totalRate[0] < totalRate[2] ? "Lakewood, Total Rates: $" + totalRate[0]
-						: "Ridgewood, Total Rates: $" + totalRate[2]
-				: totalRate[1] < totalRate[2] ? "Bridgewood, Total Rates: $" + totalRate[1]
-						: "Ridgewood, Total Rates: $" + totalRate[2];
+		int ratings[] = { hotelList.get("Lakewood").getRatings(), hotelList.get("Bridgewood").getRatings(),
+				hotelList.get("Ridgewood").getRatings() };
+		String hotel = "";
+		if (totalRate[0] == totalRate[1] && totalRate[0]<totalRate[2]) {
+			if (ratings[0]>ratings[1])
+				return "Lakewood, Total Rates: $"+totalRate[0];
+			else
+				return "Bridgewood, Total Rates: $"+totalRate[1];
+		}else if (totalRate[0] == totalRate[2] && totalRate[0] < totalRate[1]) {
+			if (ratings[0]>ratings[2])
+				return "Lakewood, Total Rates: $"+totalRate[0];
+			else
+				return "Ridgewood, Total Rates: $"+totalRate[2];
+		}else if (totalRate[1] == totalRate[2] && totalRate[1] < totalRate[0]) {
+			if(ratings[1] > ratings[2])
+				return "Bridgewood, Total Rates: $"+totalRate[1];
+			else
+				return "Ridgewood, Total Rates: $"+totalRate[2];
+		}else{
+			return totalRate[0]<=totalRate[1]?totalRate[0]<=totalRate[2]?"Lakewood, Total Rates: $"+totalRate[0]:"Ridgewood, Total Rates: $"+totalRate[2]:totalRate[1]<=totalRate[2]?"Bridgewood, Total Rates: $"+totalRate[1]:"Ridgewood, Total Rates: $"+totalRate[2];
+		}
 	}
 
 	public static void main(String[] args) {

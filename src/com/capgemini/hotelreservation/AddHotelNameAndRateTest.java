@@ -49,4 +49,21 @@ public class AddHotelNameAndRateTest {
 
 		logger.info("Hotel details added and tested");
 	}
+	
+	// Test to check for cheapest hotel for date range based on weekday and weekend
+		@Test
+		public void testCheapestHotelForDate() {
+
+			// Calling the function to store details
+			hotelReservation.addHotelNameAndRate(weekdayRate1, weekendRate1, ratings1, hotelName1, CustomerType.RegularCustomer);
+			hotelReservation.addHotelNameAndRate(weekdayRate1, weekendRate1, ratings2, hotelName2, CustomerType.RegularCustomer);
+			hotelReservation.addHotelNameAndRate(weekdayRate3, weekendRate3, ratings3, hotelName3, CustomerType.RegularCustomer);
+			// Giving Date
+			ArrayList<String> date = new ArrayList<String>();
+			date.add("11September2020");
+			date.add("12September2020");
+			Assert.assertEquals("Bridgewood, Total Rates: $200", hotelReservation.cheapestHotelByDate(date));
+
+			logger.info("Cheapest hotel based on weekday and weekend rate returend");
+		}
 }
