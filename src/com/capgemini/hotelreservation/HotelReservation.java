@@ -71,8 +71,10 @@ public class HotelReservation {
 				int day = dateFormat[dateIndex].getDayOfWeek().getValue();
 				if (day == 1 || day == 2 || day == 3 || day == 4 || day == 5) {
 					totalRate[hotelIndex] = totalRate[hotelIndex] + rateWeekday.get(hotelIndex);
+					System.out.println(totalRate[hotelIndex]);
 				} else if (day == 6 || day == 7) {
 					totalRate[hotelIndex] = totalRate[hotelIndex] + rateWeekend.get(hotelIndex);
+					System.out.println(totalRate[hotelIndex]);
 				}
 				counterNoOfDays++;
 				dateIndex++;
@@ -100,7 +102,7 @@ public class HotelReservation {
 					? totalRate[0] < totalRate[2] ? "Ridgewood, Total Rates: $" + totalRate[0]
 							: "Lakewood, Total Rates: $" + totalRate[2]
 					: totalRate[1] < totalRate[2] ? "Bridgewood, Total Rates: $" + totalRate[1]
-							: "Ridgewood, Total Rates: $" + totalRate[2];
+							: "Lakewood, Total Rates: $" + totalRate[2];
 		}
 	}
 
