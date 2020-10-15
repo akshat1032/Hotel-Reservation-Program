@@ -13,14 +13,6 @@ public class HotelReservation {
 		RegularCustomer, RewardCustomer;
 	}
 
-	public enum Weekday {
-		MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY;
-	}
-
-	public enum Weekend {
-		SATURDAY, SUNDAY;
-	}
-
 	// Instance variable for storing details of hotel and list of hotels
 	public static HashMap<String, Hotel> hotelList = new HashMap<String, Hotel>();
 	public static HashMap<String, Hotel> hotelListReward = new HashMap<String, Hotel>();
@@ -41,7 +33,7 @@ public class HotelReservation {
 
 	// Return cheapest hotel and best rated by range of date based on weekend and
 	// weekdays
-	public String cheapestHotelByDate(ArrayList<String> date) {
+	public String cheapestHotelByDate(ArrayList<String> date, CustomerType customerType) {
 		LocalDate dateFormat[] = new LocalDate[2];
 		int dateIndex = 0;
 		String dateregex = "^(([0-9])|([0-2][0-9])|([3][0-1]))(January|February|March|April|May|June|July|August|September|October|November|December)\\d{4}$";
@@ -55,9 +47,29 @@ public class HotelReservation {
 				dateIndex++;
 			}
 		}
-		int rate[][] = { { hotelList.get("Lakewood").getWeekdayRate(), hotelList.get("Lakewood").getWeekendRate() },
-				{ hotelList.get("Bridgewood").getWeekdayRate(), hotelList.get("Bridgewood").getWeekendRate() },
-				{ hotelList.get("Ridgewood").getWeekdayRate(), hotelList.get("Ridgewood").getWeekendRate() } };
+		int rate[][] = new int[3][2];
+		int ratings[] = new int[3];
+		if (customerType == CustomerType.RegularCustomer) {
+			rate[0][0] = hotelList.get("Lakewood").getWeekdayRate();
+			rate[0][1] = hotelList.get("Lakewood").getWeekendRate();
+			rate[1][0] = hotelList.get("Bridgewood").getWeekdayRate();
+			rate[1][1] = hotelList.get("Bridgewood").getWeekendRate();
+			rate[2][0] = hotelList.get("Ridgewood").getWeekdayRate();
+			rate[2][1] = hotelList.get("Ridgewood").getWeekendRate();
+			ratings[0] = hotelList.get("Lakewood").getRatings();
+			ratings[1] = hotelList.get("Bridgewood").getRatings();
+			ratings[2] = hotelList.get("Ridgewood").getRatings();
+		} else {
+			rate[0][0] = hotelListReward.get("Lakewood").getWeekdayRate();
+			rate[0][1] = hotelListReward.get("Lakewood").getWeekendRate();
+			rate[1][0] = hotelListReward.get("Bridgewood").getWeekdayRate();
+			rate[1][1] = hotelListReward.get("Bridgewood").getWeekendRate();
+			rate[2][0] = hotelListReward.get("Ridgewood").getWeekdayRate();
+			rate[2][1] = hotelListReward.get("Ridgewood").getWeekendRate();
+			ratings[0] = hotelListReward.get("Lakewood").getRatings();
+			ratings[1] = hotelListReward.get("Bridgewood").getRatings();
+			ratings[2] = hotelListReward.get("Ridgewood").getRatings();
+		}
 		int totalRate[] = new int[3];
 		int hotelIndex = 0;
 		int noOfDays = dateFormat[1].getDayOfMonth() - dateFormat[0].getDayOfMonth();
@@ -77,15 +89,28 @@ public class HotelReservation {
 			hotelIndex++;
 			counterNoOfDays = 0;
 		} while (hotelIndex != 3);
-		int ratings[] = { hotelList.get("Lakewood").getRatings(), hotelList.get("Bridgewood").getRatings(),
-				hotelList.get("Ridgewood").getRatings() };
-		String hotel = "";
-
-		return ratings[0] > ratings[1]
-				? ratings[0] > ratings[2] ? "Lakewood, Total Rates: $" + totalRate[0]
-						: "Ridgewood, Total Rates: $" + totalRate[2]
-				: ratings[1] > ratings[2] ? "Bridgewood, Total Rates: $" + totalRate[1]
-						: "Ridgewood, Total Rates: $" + totalRate[2];
+		if (totalRate[0] == totalRate[1] && totalRate[0] < totalRate[2]) {
+			if (ratings[0] > ratings[1])
+				return "Lakewood, Total Rates: $" + totalRate[0];
+			else
+				return "Bridgewood, Total Rates: $" + totalRate[1];
+		} else if (totalRate[0] == totalRate[2] && totalRate[0] < totalRate[1]) {
+			if (ratings[0] > ratings[2])
+				return "Lakewood, Total Rates: $" + totalRate[0];
+			else
+				return "Ridgewood, Total Rates: $" + totalRate[2];
+		} else if (totalRate[1] == totalRate[2] && totalRate[1] < totalRate[0]) {
+			if (ratings[1] > ratings[2])
+				return "Bridgewood, Total Rates: $" + totalRate[1];
+			else
+				return "Ridgewood, Total Rates: $" + totalRate[2];
+		} else {
+			return totalRate[0] <= totalRate[1]
+					? totalRate[0] <= totalRate[2] ? "Lakewood, Total Rates: $" + totalRate[0]
+							: "Ridgewood, Total Rates: $" + totalRate[2]
+					: totalRate[1] <= totalRate[2] ? "Bridgewood, Total Rates: $" + totalRate[1]
+							: "Ridgewood, Total Rates: $" + totalRate[2];
+		}
 	}
 
 	public static void main(String[] args) {
