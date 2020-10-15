@@ -74,25 +74,11 @@ public class HotelReservation {
 		int ratings[] = { hotelList.get("Lakewood").getRatings(), hotelList.get("Bridgewood").getRatings(),
 				hotelList.get("Ridgewood").getRatings() };
 		String hotel = "";
-		if (totalRate[0] == totalRate[1] && totalRate[0]<totalRate[2]) {
-			if (ratings[0]>ratings[1])
-				return "Lakewood, Total Rates: $"+totalRate[0];
-			else
-				return "Bridgewood, Total Rates: $"+totalRate[1];
-		}else if (totalRate[0] == totalRate[2] && totalRate[0] < totalRate[1]) {
-			if (ratings[0]>ratings[2])
-				return "Lakewood, Total Rates: $"+totalRate[0];
-			else
-				return "Ridgewood, Total Rates: $"+totalRate[2];
-		}else if (totalRate[1] == totalRate[2] && totalRate[1] < totalRate[0]) {
-			if(ratings[1] > ratings[2])
-				return "Bridgewood, Total Rates: $"+totalRate[1];
-			else
-				return "Ridgewood, Total Rates: $"+totalRate[2];
-		}else{
-			return totalRate[0]<=totalRate[1]?totalRate[0]<=totalRate[2]?"Lakewood, Total Rates: $"+totalRate[0]:"Ridgewood, Total Rates: $"+totalRate[2]:totalRate[1]<=totalRate[2]?"Bridgewood, Total Rates: $"+totalRate[1]:"Ridgewood, Total Rates: $"+totalRate[2];
-		}
+		
+			return ratings[0]>ratings[1]?ratings[0]>ratings[2]?"Lakewood, Total Rates: $"+totalRate[0]:"Ridgewood, Total Rates: $"+totalRate[2]:ratings[1]>ratings[2]?"Bridgewood, Total Rates: $"+totalRate[1]:"Ridgewood, Total Rates: $"+totalRate[2];
 	}
+	
+	
 
 	public static void main(String[] args) {
 
