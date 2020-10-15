@@ -1,9 +1,7 @@
 package com.capgemini.hotelreservation;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
-import java.time.Period;
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -12,7 +10,7 @@ import java.util.regex.Pattern;
 public class HotelReservation {
 
 	public enum CustomerType {
-		RegularCustomer;
+		RegularCustomer, RewardCustomer;
 	}
 
 	public enum Weekday {
@@ -25,12 +23,20 @@ public class HotelReservation {
 
 	// Instance variable for storing details of hotel and list of hotels
 	public static HashMap<String, Hotel> hotelList = new HashMap<String, Hotel>();
+	public static HashMap<String, Hotel> hotelListReward = new HashMap<String, Hotel>();
 
 	// Adding hotel name and rate for each hotel to the system
 	public void addHotelNameAndRate(int weekdayRate, int weekendRate, int ratings, String hotelName,
 			CustomerType customerType) {
 		Hotel hotelDetails = new Hotel(weekdayRate, weekendRate, ratings, customerType);
 		hotelList.put(hotelName, hotelDetails);
+	}
+
+	// Adding hotel name and rate for each hotel for Reward customer
+	public void addHotelNameAndRateForReward(int weekdayRate, int weekendRate, int ratings, String hotelName,
+			CustomerType customerType) {
+		Hotel hotelDetails = new Hotel(weekdayRate, weekendRate, ratings, customerType);
+		hotelListReward.put(hotelName, hotelDetails);
 	}
 
 	// Return cheapest hotel and best rated by range of date based on weekend and
@@ -74,11 +80,13 @@ public class HotelReservation {
 		int ratings[] = { hotelList.get("Lakewood").getRatings(), hotelList.get("Bridgewood").getRatings(),
 				hotelList.get("Ridgewood").getRatings() };
 		String hotel = "";
-		
-			return ratings[0]>ratings[1]?ratings[0]>ratings[2]?"Lakewood, Total Rates: $"+totalRate[0]:"Ridgewood, Total Rates: $"+totalRate[2]:ratings[1]>ratings[2]?"Bridgewood, Total Rates: $"+totalRate[1]:"Ridgewood, Total Rates: $"+totalRate[2];
+
+		return ratings[0] > ratings[1]
+				? ratings[0] > ratings[2] ? "Lakewood, Total Rates: $" + totalRate[0]
+						: "Ridgewood, Total Rates: $" + totalRate[2]
+				: ratings[1] > ratings[2] ? "Bridgewood, Total Rates: $" + totalRate[1]
+						: "Ridgewood, Total Rates: $" + totalRate[2];
 	}
-	
-	
 
 	public static void main(String[] args) {
 
