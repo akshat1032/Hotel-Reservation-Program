@@ -6,6 +6,8 @@ import java.util.*;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class HotelReservation {
 
@@ -47,28 +49,17 @@ public class HotelReservation {
 				dateIndex++;
 			}
 		}
-		int rate[][] = new int[3][2];
-		int ratings[] = new int[3];
+		List<Integer> rateWeekday;
+		List<Integer> rateWeekend;
+		List<Integer> ratings;
 		if (customerType == CustomerType.RegularCustomer) {
-			rate[0][0] = hotelList.get("Lakewood").getWeekdayRate();
-			rate[0][1] = hotelList.get("Lakewood").getWeekendRate();
-			rate[1][0] = hotelList.get("Bridgewood").getWeekdayRate();
-			rate[1][1] = hotelList.get("Bridgewood").getWeekendRate();
-			rate[2][0] = hotelList.get("Ridgewood").getWeekdayRate();
-			rate[2][1] = hotelList.get("Ridgewood").getWeekendRate();
-			ratings[0] = hotelList.get("Lakewood").getRatings();
-			ratings[1] = hotelList.get("Bridgewood").getRatings();
-			ratings[2] = hotelList.get("Ridgewood").getRatings();
+			rateWeekday = hotelList.values().stream().map(detail -> detail.getWeekdayRate()).collect(Collectors.toList());
+			rateWeekend = hotelList.values().stream().map(detail -> detail.getWeekendRate()).collect(Collectors.toList());
+			ratings = hotelList.values().stream().map(detail -> detail.getRatings()).collect(Collectors.toList());
 		} else {
-			rate[0][0] = hotelListReward.get("Lakewood").getWeekdayRate();
-			rate[0][1] = hotelListReward.get("Lakewood").getWeekendRate();
-			rate[1][0] = hotelListReward.get("Bridgewood").getWeekdayRate();
-			rate[1][1] = hotelListReward.get("Bridgewood").getWeekendRate();
-			rate[2][0] = hotelListReward.get("Ridgewood").getWeekdayRate();
-			rate[2][1] = hotelListReward.get("Ridgewood").getWeekendRate();
-			ratings[0] = hotelListReward.get("Lakewood").getRatings();
-			ratings[1] = hotelListReward.get("Bridgewood").getRatings();
-			ratings[2] = hotelListReward.get("Ridgewood").getRatings();
+			rateWeekday = hotelListReward.values().stream().map(detail -> detail.getWeekdayRate()).collect(Collectors.toList());
+			rateWeekend = hotelListReward.values().stream().map(detail -> detail.getWeekendRate()).collect(Collectors.toList());
+			ratings = hotelListReward.values().stream().map(detail -> detail.getRatings()).collect(Collectors.toList());
 		}
 		int totalRate[] = new int[3];
 		int hotelIndex = 0;
@@ -79,9 +70,9 @@ public class HotelReservation {
 			do {
 				int day = dateFormat[dateIndex].getDayOfWeek().getValue();
 				if (day == 1 || day == 2 || day == 3 || day == 4 || day == 5) {
-					totalRate[hotelIndex] = totalRate[hotelIndex] + rate[hotelIndex][0];
+					totalRate[hotelIndex] = totalRate[hotelIndex] + rateWeekday.get(hotelIndex);
 				} else if (day == 6 || day == 7) {
-					totalRate[hotelIndex] = totalRate[hotelIndex] + rate[hotelIndex][1];
+					totalRate[hotelIndex] = totalRate[hotelIndex] + rateWeekend.get(hotelIndex);
 				}
 				counterNoOfDays++;
 				dateIndex++;
@@ -90,25 +81,25 @@ public class HotelReservation {
 			counterNoOfDays = 0;
 		} while (hotelIndex != 3);
 		if (totalRate[0] == totalRate[1] && totalRate[0] < totalRate[2]) {
-			if (ratings[0] > ratings[1])
-				return "Lakewood, Total Rates: $" + totalRate[0];
+			if (ratings.get(0)>ratings.get(1)) {
+				return "Ridgewood, Total Rates: $" + totalRate[0];}
 			else
 				return "Bridgewood, Total Rates: $" + totalRate[1];
 		} else if (totalRate[0] == totalRate[2] && totalRate[0] < totalRate[1]) {
-			if (ratings[0] > ratings[2])
-				return "Lakewood, Total Rates: $" + totalRate[0];
+			if (ratings.get(0)>ratings.get(2))
+				return "Ridgewood, Total Rates: $" + totalRate[0];
 			else
-				return "Ridgewood, Total Rates: $" + totalRate[2];
+				return "Lakewood, Total Rates: $" + totalRate[2];
 		} else if (totalRate[1] == totalRate[2] && totalRate[1] < totalRate[0]) {
-			if (ratings[1] > ratings[2])
+			if (ratings.get(1)>ratings.get(2))
 				return "Bridgewood, Total Rates: $" + totalRate[1];
 			else
 				return "Ridgewood, Total Rates: $" + totalRate[2];
 		} else {
-			return totalRate[0] <= totalRate[1]
-					? totalRate[0] <= totalRate[2] ? "Lakewood, Total Rates: $" + totalRate[0]
-							: "Ridgewood, Total Rates: $" + totalRate[2]
-					: totalRate[1] <= totalRate[2] ? "Bridgewood, Total Rates: $" + totalRate[1]
+			return totalRate[0] < totalRate[1]
+					? totalRate[0] < totalRate[2] ? "Ridgewood, Total Rates: $" + totalRate[0]
+							: "Lakewood, Total Rates: $" + totalRate[2]
+					: totalRate[1] < totalRate[2] ? "Bridgewood, Total Rates: $" + totalRate[1]
 							: "Ridgewood, Total Rates: $" + totalRate[2];
 		}
 	}
